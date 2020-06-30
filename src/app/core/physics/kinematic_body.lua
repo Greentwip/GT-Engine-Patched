@@ -250,7 +250,10 @@ function kinematic_body:solve_collisions(_, shape)
 
             local shape_box = cc.rect(shape_left, shape_bottom, shape_size.width , shape_size.height)
 
+
             for i = 1, 8 do
+
+                self:compute_bounding_box()
 
                 if cc.rectIntersectsRect(self.bbox_[i], shape_box) then
 
@@ -319,7 +322,7 @@ function kinematic_body:solve_collisions(_, shape)
                         end
                     end
 
-                    self:recompute_bounding_box(new_origin)
+                    --self:recompute_bounding_box(new_origin)
 
                     if --intersection.width ~= 0
                             --and

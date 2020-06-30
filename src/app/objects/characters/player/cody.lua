@@ -398,6 +398,7 @@ function cody:move()
     self.current_browner_.speed_ = self.kinematic_body_.body_:getVelocity()
 
     if self.contacts_[cc.kinematic_contact_.down] then
+        print("contact")
         self.current_browner_.speed_.y = 0
 
         if not self.current_browner_.on_ground_ and not self.current_browner_.climbing_ then
@@ -407,7 +408,8 @@ function cody:move()
             audio.playSound("sounds/sfx_land.wav", false)
         end
     else
-        --self.current_browner_.on_ground_ = false
+        print("no contact")
+        self.current_browner_.on_ground_ = false
         self.current_browner_.jumping_  = true
     end
 
