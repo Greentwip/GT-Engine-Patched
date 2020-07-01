@@ -64,6 +64,7 @@ proj.ios_mac/.idea/*
 # Non-lua engine files #
 frameworks/*
 runtime/*
+simulator/*
 
 # Generated files in the Android project #
 proj.android/libs/armeabi/*
