@@ -4,8 +4,8 @@
 local browner           = import("app.objects.characters.enemies.browners.base.browner")
 local teleport_browner  = class("teleport_browner-enemy", browner)
 
-function teleport_browner:ctor(sprite)
-    self.super:ctor(sprite)
+function teleport_browner:ctor(sprite, args)
+    self.super:ctor(sprite, args)
 
     self.base_name_ = "teleport"
 

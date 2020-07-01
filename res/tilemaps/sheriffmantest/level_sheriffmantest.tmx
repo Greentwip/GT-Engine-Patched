@@ -53,7 +53,7 @@
   <object id="53" name="checkpoint" type="first" x="120" y="104" width="16" height="16"/>
   <object id="54" name="teleporter" x="120" y="160" width="16" height="16"/>
   <object id="55" name="scroll" type="right" x="104" y="104" width="16" height="16"/>
-  <object id="56" name="scroll" type="left" x="376" y="104" width="16" height="16"/>
+  <object id="56" name="scroll" type="left" x="136.25" y="104.25" width="16" height="16"/>
   <object id="102" name="hole" x="608" y="211" width="48" height="24"/>
   <object id="103" name="hole" x="529" y="437" width="207" height="24"/>
   <object id="105" name="ladder" x="1122" y="400" width="14" height="186"/>
@@ -64,7 +64,7 @@
   <object id="113" name="scroll" type="left" x="2936" y="104" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="4" name="enemies">
-  <object id="57" name="cannon_joe" type="general" x="440" y="64" width="16" height="16"/>
+  <object id="57" name="cannon_joe" type="general" x="440" y="64" width="16" height="16" visible="0"/>
   <object id="61" name="sumatran" type="general" x="864" y="592" width="16" height="16"/>
   <object id="62" name="taban" type="general" x="1400" y="72" width="16" height="16"/>
   <object id="63" name="jetbird" type="sheriff" x="1496" y="120" width="16" height="16"/>
@@ -94,5 +94,7 @@
  <objectgroup id="7" name="boss">
   <object id="10" name="boss" type="sheriff" x="3520" y="22" width="16" height="16"/>
   <object id="11" name="teleporter" x="3520" y="160" width="16" height="16"/>
+  <object id="15" name="boss" type="sheriff" x="207.75" y="21" width="16" height="16"/>
+  <object id="16" name="teleporter" x="207.75" y="159" width="16" height="16"/>
  </objectgroup>
 </map>

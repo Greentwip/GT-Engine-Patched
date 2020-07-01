@@ -5,8 +5,8 @@ local directional_star_bullet     = import("app.objects.weapons.browners.sheriff
 
 local sheriff_browner = class("sheriff_browner-enemy", browner)
 
-function sheriff_browner:ctor(sprite)
-    self.super:ctor(sprite)
+function sheriff_browner:ctor(sprite, args)
+    self.super:ctor(sprite, args)
 
     -- constraints
     self.can_slide_         = false
@@ -29,86 +29,346 @@ function sheriff_browner:ctor(sprite)
     self.sprite_:load_actions_set(actions, true, self.base_name_)
 
     self.browner_id_ = cc.browners_.sheriff_.id_       -- overriden from parent
+
+    self.ticks_ = 0
+
+    self.state_nothing_ = 0
+    self.state_initial_shoot_prepare_ = 1
+    self.state_initial_shooting_ = 2
+
+    self.state_initial_jumping_prepare_ = 3
+
+    self.state_dash_prepare_ = 4
+    self.state_dash_ = 5
+    self.state_dash_end_ = 6
+
+    self.state_diagonal_attack_prepare_ = 7
+    self.state_diagonal_slash_prepare_ = 8
+    self.state_diagonal_slash_ = 9
+    self.state_diagonal_slash_reset_ = 10
+
+    self.jump_flag_ = false
+
+    self.jump_counter_ = 0
+
+    self.dash_flag_ = false
+
+    self.dash_direction_ = 1
+
+    self.rounds_ = 0
+
+    self.state_ = self.state_nothing_
+    
+end
+
+
+cc.exports.UnanchoredPosition = function(newAnchorPoint, sprite)
+    local rect = sprite:getContentSize()
+    local oldAnchorPoint = sprite:getAnchorPoint()
+    local scaleX = sprite:getScaleX()
+    local scaleY = sprite:getScaleY()
+
+    local newPoint = cc.p(rect.width * newAnchorPoint.x * scaleX, rect.height * newAnchorPoint.y * scaleY)
+    local oldPoint = cc.p(rect.width * oldAnchorPoint.x * scaleX, rect.height * oldAnchorPoint.y * scaleY)
+
+    local position = cc.p(sprite:getPosition())
+
+    position.x = position.x - oldPoint.x
+    position.x = position.x + newPoint.x
+
+    position.y = position.y - oldPoint.y
+    position.y = position.y + newPoint.y
+
+    return position;
+end
+
+function sheriff_browner:update(dt)
+    self.ticks_ = self.ticks_ + dt
+
+    if self.state_ == self.state_nothing_ then
+        self.state_ = self.state_initial_shoot_prepare_
+        self.jump_flag_ = false
+        self.dash_flag_ = false
+        self.jump_counter_ = 0
+        self.ticks_ = 0
+        self.dash_direction_ = -self.dash_direction_
+
+        if self.rounds_ == 2 then
+            self.state_ = self.state_diagonal_attack_prepare_
+        end
+
+    elseif self.state_ == self.state_initial_shoot_prepare_ then
+        self.state_ = self.state_initial_shooting_
+
+        self.attacking_ = true
+
+        local pre_delay = cc.DelayTime:create(self:get_action_duration("standshoot"))
+
+        local pre_callback = cc.CallFunc:create(function()
+            self:fire()
+        end)
+
+        local post_delay = cc.DelayTime:create(self:get_action_duration("standshoot") * 0.50)
+
+        local post_callback = cc.CallFunc:create(function()
+            self.attacking_ = false
+            self.state_ = self.state_initial_jumping_prepare_
+            self.ticks_ = 0
+        end)
+
+        local sequence = cc.Sequence:create(pre_delay, pre_callback, post_delay, post_callback, nil)
+
+        self:runAction(sequence)
+    
+    elseif self.state_ == self.state_initial_shooting_ then
+        return self
+
+    elseif self.state_ == self.state_initial_jumping_prepare_ then
+        
+        if self.ticks_ > 0.5 and self.ticks_ < 2 then
+            if not self.jump_flag_ then
+                self.jump_flag_ = true
+                self.speed_.y  = self.jump_speed_ * 1.5
+                
+                self.on_ground_ = false
+                self.jumping_ = true
+                self.jump_counter_ = self.jump_counter_ + 1
+            end
+        end
+        
+        if self.ticks_ > 0.5 and self.ticks_ < 2 then
+            if not self.on_ground_ then
+                self.speed_.x = -self.walk_speed_ * -self.dash_direction_
+            else
+                self.speed_.x = 0
+                self.ticks_ = 0
+                self.jump_flag_ = false
+            end
+        end
+
+        if self.jump_counter_ == 3 then
+
+            if not self.dash_flag_ then
+                self.dash_flag_ = true
+
+                local post_delay = cc.DelayTime:create(1)
+
+                local post_callback = cc.CallFunc:create(function()
+                    self.state_ = self.state_dash_prepare_
+                end)
+        
+                local sequence = cc.Sequence:create(post_delay, post_callback, nil)
+        
+                self:runAction(sequence)
+            end
+
+        end
+
+    elseif self.state_ == self.state_dash_prepare_ then
+        self.state_ = self.state_dash_
+
+        local dash_delay_1 = cc.DelayTime:create(1)
+
+        local post_callback = cc.CallFunc:create(function()
+            self.state_ = self.state_dash_end_
+        end)
+        
+
+        local dash_delay_2 = cc.DelayTime:create(1)
+
+        local dash_callback = cc.CallFunc:create(function()
+            self.dash_direction_ = -self.dash_direction_
+        end)
+
+
+        local sequence = cc.Sequence:create(dash_delay_1, dash_callback, dash_delay_2, dash_callback, post_callback, nil)
+
+        self:runAction(sequence)
+
+
+    elseif self.state_ == self.state_dash_ then
+
+        if self.dash_direction_ == -1 then
+            self.sprite_:setFlippedX(false)
+        else
+            self.sprite_:setFlippedX(true)
+        end
+        
+        self.speed_.x = self.walk_speed_ * 2 * -self.dash_direction_
+        self.walking_ = true
+ --[==[
+                
+        if self.player_:getParent():convertToWorldSpace(cc.p(self.player_:getPosition())).x > 
+            self:getParent():convertToWorldSpace(cc.p(self:getPosition())).x then
+
+
+        else
+            
+            self.speed_.x = -self.walk_speed_ * 2
+            self.walking_ = true 
+
+               
+
+            self.sprite_:setFlippedX(true)
+            self.speed_.x = -self.walk_speed_
+            self.walking_ = true 
+
+                       
+        end         ]==]
+    elseif self.state_ == self.state_dash_end_ then
+        self.speed_.x = 0
+        self.walking_ = false
+        self.state_ = self.state_nothing_
+
+        self.rounds_ = self.rounds_ + 1
+
+        if self.dash_direction_ == -1 then
+            self.sprite_:setFlippedX(false)
+        else
+            self.sprite_:setFlippedX(true)
+        end
+
+                        --[==[
+                
+
+
+
+        local post_delay = cc.DelayTime:create(2.5)
+
+        local post_callback = cc.CallFunc:create(function()
+            self.state_ = self.state_nothing_
+        end)
+
+        local sequence = cc.Sequence:create(post_delay, post_callback, nil)
+        
+        self:runAction(sequence)
+                        ]==]
+
+    elseif self.state_ == self.state_diagonal_attack_prepare_ then
+
+        --print("diagonal")
+        if self.ticks_ > 0.5 and self.ticks_ < 2 then
+            if not self.jump_flag_ then
+                print("Jumping")
+                self.jump_flag_ = true
+                self.speed_.y  = self.jump_speed_ * 1.25
+                
+                self.on_ground_ = false
+                self.jumping_ = true
+                self.jump_counter_ = self.jump_counter_ + 1
+            end
+        end
+        
+        if self.ticks_ > 0.5 and self.ticks_ < 2 then
+            if not self.on_ground_ then
+                --self.speed_.x = -self.walk_speed_ * -self.dash_direction_
+
+                if self.speed_.y < 0 then
+                    self.boss_.kinematic_body_.body_:setGravityEnable(false)
+                    --self.boss_.kinematic_body_.body_:setVelocity(cc.p(0, 0))
+                    self.speed_.y = 0
+
+                    local positionBackup = cc.p(self.boss_.sprite_:getPosition())
+                    local anchorBackup = self.boss_.sprite_:getAnchorPoint()
+                    local size = self.boss_.sprite_:getContentSize()
+
+                    local delay = cc.DelayTime:create(0.25)
+                    
+                    local pre_callback = cc.CallFunc:create(function()
+                        self.boss_.sprite_:setPosition(cc.exports.UnanchoredPosition(cc.p(0.5, 0.5), self.boss_.sprite_))
+                        self.boss_.sprite_:setAnchorPoint(cc.p(0.5, 0.5))
+
+                    end)
+
+                    local rotateBy = cc.RotateBy:create(0.5, 360 * self.dash_direction_)
+
+                    local post_callback = cc.CallFunc:create(function()
+                        self.boss_.sprite_:setAnchorPoint(anchorBackup)
+                        self.boss_.sprite_:setPosition(positionBackup)
+                        self.state_ = self.state_diagonal_slash_prepare_
+                    end)
+                
+                    local sequence = cc.Sequence:create(delay, pre_callback, rotateBy, post_callback, nil)
+            
+                    self.boss_.sprite_:runAction(sequence)
+                end
+        
+
+            else
+                self.speed_.x = 0
+                self.ticks_ = 0
+                self.jump_flag_ = false
+            end
+        end
+
+    elseif self.state_ == self.state_diagonal_slash_prepare_ then
+        self.jump_flag_ = false
+        self.dash_flag_ = false
+        self.state_ = self.state_diagonal_slash_
+
+    elseif self.state_ == self.state_diagonal_slash_ then
+        self.speed_.y = -self.jump_speed_ * 1.25
+        self.speed_.x = self.walk_speed_ * 14 * self.dash_direction_
+
+        if self.on_ground_ then
+            self.speed_.y = 0
+            self.speed_.x = 0
+
+            print("flip")
+            if self.dash_direction_ == -1 then
+                self.sprite_:setFlippedX(false)
+            else
+                self.sprite_:setFlippedX(true)
+            end
+
+            self.dash_flag_ = false
+            self.dash_direction_ = -self.dash_direction_
+
+            self.boss_.kinematic_body_.body_:setGravityEnable(true)
+            self.ticks_ = 0
+
+            if self.jump_counter_ == 2 then
+
+                if not self.dash_flag_ then
+                    self.dash_flag_ = true
+
+                    self.dash_direction_ = -self.dash_direction_
+
+                    self.state_ = self.state_diagonal_slash_reset_
+    
+                    local post_delay = cc.DelayTime:create(0.25)
+    
+                    local post_callback = cc.CallFunc:create(function()
+                        self.rounds_ = 0
+                        self.state_ = self.state_nothing_
+                    end)
+            
+                    local sequence = cc.Sequence:create(post_delay, post_callback, nil)
+            
+                    self:runAction(sequence)
+                end
+
+            else
+                self.state_ = self.state_diagonal_attack_prepare_   
+            end            
+        elseif self.state_ == self.state_diagonal_slash_reset_ then 
+            return self
+        end
+    end
+
 end
 
 function sheriff_browner:walk()    --@TODO implement walk_condition()
-
-if  not self.climbing_ and not self.stunned_ and not self.attacking_ then
-    if cc.key_down(cc.key_code_.right) and not cc.key_down(cc.key_code_.left) then
-        self.sprite_:setFlippedX(false)
-        self.speed_.x = self.walk_speed_
-        self.walking_ = true
-    elseif cc.key_down(cc.key_code_.left) and not cc.key_down(cc.key_code_.right) then
-        self.sprite_:setFlippedX(true)
-        self.speed_.x = -self.walk_speed_
-        self.walking_ = true
-    else
-        self.speed_.x = 0
-        self.walking_ = false
-    end
-
-    if not cc.key_down(cc.key_code_.right) and not cc.key_down(cc.key_code_.left)  then
-        self.speed_.x = 0
-        self.walking_ = false
-    end
-
-else
-    self.walking_ = false
-end
-
+    return self    
 end
 
 function sheriff_browner:jump()
-
-    if cc.key_pressed(cc.key_code_.a)
-            and not cc.key_down(cc.key_code_.up)
-            and not cc.key_down(cc.key_code_.down)
-            and self.on_ground_
-            and not self.stunned_
-            and not self.attacking_ then
-
-        self.speed_.y  = self.jump_speed_
-        self.on_ground_ = false
-        self.jumping_ = true
-    end
-
-    if not cc.key_down(cc.key_code_.a) and self.speed_.y >= 0 and not self.climbing_ and not self.on_ground_ then
-        self.speed_.y = 0
-    end
-
+    return self
 end
 
 
 function sheriff_browner:attack()
-
-    if cc.key_pressed(cc.key_code_.b) and not self.jumping_ and not self.walking_ and not self.stunned_ and not self.attacking_ then
-
-        if self.energy_ > 0 then
-
-            self.energy_ = self.energy_ - 1
-
-            self.attacking_ = true
-
-            local pre_delay = cc.DelayTime:create(self:get_action_duration("standshoot"))
-
-            local pre_callback = cc.CallFunc:create(function()
-                self:fire()
-            end)
-
-            local post_delay = cc.DelayTime:create(self:get_action_duration("standshoot") * 0.50)
-
-            local post_callback = cc.CallFunc:create(function()
-                self.attacking_ = false
-            end)
-
-            local sequence = cc.Sequence:create(pre_delay, pre_callback, post_delay, post_callback, nil)
-
-            self:runAction(sequence)
-
-        end
-
-    end
-
+    return self
 end
 
 function sheriff_browner:fire()

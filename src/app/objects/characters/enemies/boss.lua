@@ -54,7 +54,9 @@ function boss:init_browners(args)
     local browner      = import("app.objects.characters.enemies.browners." .. args.type_ .. "_" .. "browner")
 
 
-    local boss_browner = browner:create(self.sprite_)
+    args.boss_ = self
+
+    local boss_browner = browner:create(self.sprite_, args)
                                 :addTo(self)
 
     self.browners_[cc.browners_.boss_.id_] = boss_browner
@@ -278,9 +280,6 @@ function boss:move()
             self.current_browner_.jumping_      = false
             audio.playSound("sounds/sfx_land.wav", false)
         end
-    else
-        --self.current_browner_.on_ground_ = false
-        self.current_browner_.jumping_  = true
     end
 
     if self.contacts_[cc.kinematic_contact_.up] then
@@ -290,6 +289,8 @@ function boss:move()
     end
 
     if self.battle_status_ == cc.battle_status_.fighting_ then
+
+        self:update(1/60)
 
         self:walk()
         self:jump()
@@ -468,6 +469,7 @@ function boss:trigger_actions()
                     if self.current_browner_.dash_jumping_ then
                         self.current_browner_:run_action("dashjump")
                     elseif self.current_browner_.jumping_ then
+                        --print("is jumping")
                         self.current_browner_:run_action("jump")
                     end
                 end
@@ -477,6 +479,10 @@ function boss:trigger_actions()
         self.current_browner_:run_action("hurt")
     end
 
+end
+
+function boss:update(dt)
+   self.current_browner_:update(dt) 
 end
 
 

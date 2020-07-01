@@ -397,15 +397,16 @@ function MyApp:setup_levels()
 
     local level_mugs = {}
 
-    level_mugs[#level_mugs + 1] = "freezerman"
-    level_mugs[#level_mugs + 1] = "sheriffman"
-    level_mugs[#level_mugs + 1] = "boomerman"
-    level_mugs[#level_mugs + 1] = "militaryman"
-    level_mugs[#level_mugs + 1] = "vineman"
-    level_mugs[#level_mugs + 1] = "shieldman"
-    level_mugs[#level_mugs + 1] = "nightman"
-    level_mugs[#level_mugs + 1] = "torchman"
-    level_mugs[#level_mugs + 1] = "test"
+    level_mugs[1] = "freezerman"
+    level_mugs[2] = "sheriffman"
+    level_mugs[3] = "boomerman"
+    level_mugs[4] = "militaryman"
+    level_mugs[5] = "vineman"
+    level_mugs[6] = "shieldman"
+    level_mugs[7] = "nightman"
+    level_mugs[8] = "torchman"
+    level_mugs[9] = "test"
+    level_mugs[10] = "sheriffmantest"
 
     for i = 1, #level_mugs do
         local level_map = {}

@@ -8,7 +8,6 @@ local selector  = import("app.objects.gameplay.level.ui.selector")
 
 function title:onLoad()
 
-
     self.background_ = sprite:create("sprites/gameplay/screens/title_screen/title_screen", cc.p(0, 0))
                              :setPosition(cc.p(0,0))
                              :addTo(self)

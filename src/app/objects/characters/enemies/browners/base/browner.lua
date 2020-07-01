@@ -3,9 +3,14 @@
 
 local browner       = class("browner-enemy", cc.Node)
 
-function browner:ctor(sprite)
+function browner:ctor(sprite, args)
 
     self.sprite_ = sprite
+
+    if args ~= nil then
+        self.player_ = args.player_
+        self.boss_ = args.boss_
+    end
 
     self.energy_ = 28
 
@@ -82,6 +87,8 @@ function browner:deactivate()
 end
 
 function browner:run_action(action)
+    --print("action to run")
+    --print(action)
     local basename = self.base_name_
     self.sprite_:set_animation(action .. "/" .. self.base_name_ .. "_" .. action)
     self.sprite_:run_action(action, self.base_name_)
@@ -159,6 +166,10 @@ function browner:slide()
 end
 
 function browner:climb()
+    return self
+end
+
+function browner:update(dt)
     return self
 end
 

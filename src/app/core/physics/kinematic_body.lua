@@ -341,7 +341,6 @@ function kinematic_body:solve_collisions(_, shape)
                     end
 
                 end
-
             end
         else
             if shape:getTag() ~= cc.tags.bounds then -- you don't need the bounds, in this video game, yet.
