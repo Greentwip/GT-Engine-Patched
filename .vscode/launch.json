@@ -12,7 +12,7 @@
             "command": "${workspaceRoot}/simulator/win32/revenge_of_the_future.exe"
             },
             "args": [
-                "${workspaceRoot}"
+                "${workspaceRoot}/frameworks/runtime-src/Resources"
             ]
       }
     ]
