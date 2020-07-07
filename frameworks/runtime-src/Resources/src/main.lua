@@ -9,11 +9,6 @@ cc.FileUtils:getInstance():addSearchPath("src/")
 cc.FileUtils:getInstance():addSearchPath("src/")
 cc.FileUtils:getInstance():addSearchPath("res/")
 
-
-if device.platform ~= "winrt" then
-    require("lldebugger").start()
-end
-
 --
 local function main()
     ccexp.AudioEngine:preload('sounds/bgm_boss_intro.mp3')

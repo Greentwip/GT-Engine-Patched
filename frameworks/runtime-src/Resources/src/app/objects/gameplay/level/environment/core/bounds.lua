@@ -42,28 +42,28 @@ end
 
 function bounds:top()
     local bound = self:getPositionY() + self.size_.height * 0.5
-    return bound --self:convertToWorldSpace(cc.p(0, bound)).y
+    return self:getParent():convertToWorldSpace(cc.p(0, bound)).y
 end
 
 function bounds:bottom()
     local bound = self:getPositionY() - self.size_.height * 0.5
-    return bound --self:convertToWorldSpace(cc.p(0, bound)).y
+    return self:getParent():convertToWorldSpace(cc.p(0, bound)).y
 end
 
 function bounds:left()
     local bound = self:getPositionX() - self.size_.width * 0.5
-    return bound --self:convertToWorldSpace(cc.p(bound, 0)).x
+    return self:getParent():convertToWorldSpace(cc.p(bound, 0)).x
 end
 
 function bounds:right()
     local bound = self:getPositionX() + self.size_.width * 0.5
 
-    return bound --self:convertToWorldSpace(cc.p(bound, 0)).x
+    return self:getParent():convertToWorldSpace(cc.p(bound, 0)).x
 end
 
 function bounds:center()
     local shape_center = cc.p(self:getPositionX(), self:getPositionY())
-    return shape_center --self:convertToWorldSpace(shape_center)
+    return self:getParent():convertToWorldSpace(shape_center)
 end
 
 function bounds:left_top()

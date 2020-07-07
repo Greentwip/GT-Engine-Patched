@@ -9,6 +9,8 @@ end
 function special:onAfterAnimate(args)
     self.start_position_ = args.anchored_position_
     self:setPosition(self.start_position_)
+
+    self.triggered_ = false
 end
 
 function special:animate(cname)
@@ -39,6 +41,8 @@ function special:lock(callback)
 
     self:stopAllActions()
     self:runAction(sequence)
+
+    self.kinematic_body_.current_shape_:setTag(cc.tags.block)
 end
 
 function special:unlock(callback)
@@ -58,6 +62,8 @@ function special:unlock(callback)
 
     self:stopAllActions()
     self:runAction(sequence)
+
+    self.triggered_ = true
 end
 
 return special

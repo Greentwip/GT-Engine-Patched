@@ -318,10 +318,11 @@ function MyApp:setup_enemy()
     cc.enemy_ = {}
     cc.enemy_.status_ = {}
 
-    cc.enemy_.status_.active_   = 1
-    cc.enemy_.status_.fighting_ = 2
-    cc.enemy_.status_.defeated_ = 3
-    cc.enemy_.status_.inactive_ = 4
+    cc.enemy_.status_.preparing_   = 1
+    cc.enemy_.status_.active_   = 2
+    cc.enemy_.status_.fighting_ = 3
+    cc.enemy_.status_.defeated_ = 4
+    cc.enemy_.status_.inactive_ = 5
 
 end
 
@@ -451,7 +452,7 @@ function MyApp:setup_browners()
     cc.browners_ = {
         teleport_   = {id_ = 1,  acquired_ = true,  pause_item_ = nil},
         violet_     = {id_ = 2,  acquired_ = true,  pause_item_ = "violet"},
-        fuzzy_      = {id_ = 3,  acquired_ = true,  pause_item_ = "fuzzy"},
+        fuzzy_      = {id_ = 3,  acquired_ = false,  pause_item_ = "fuzzy"},
         freezer_    = {id_ = 4,  acquired_ = false, pause_item_ = "freezer"},
         sheriff_    = {id_ = 5,  acquired_ = false, pause_item_ = "sheriff"},
         boomer_     = {id_ = 6,  acquired_ = false, pause_item_ = "boomer"},
@@ -460,7 +461,7 @@ function MyApp:setup_browners()
         shield_     = {id_ = 9,  acquired_ = false, pause_item_ = "shield"},
         night_      = {id_ = 10, acquired_ = false, pause_item_ = "night"},
         torch_      = {id_ = 11, acquired_ = false, pause_item_ = "torch"},
-        helmet_     = {id_ = 12, acquired_ = false, pause_item_ = "helmet"},
+        helmet_     = {id_ = 12, acquired_ = true, pause_item_ = "helmet"},
         extreme_    = {id_ = 13, acquired_ = false, pause_item_ = "ex"},
         boss_       = {id_ = 14, acquired_ = nil, pause_item_ = nil }
     }

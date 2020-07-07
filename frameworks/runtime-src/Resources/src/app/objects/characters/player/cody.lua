@@ -366,7 +366,12 @@ function cody:solve_collisions()
         elseif collision_tag == cc.tags.free_scroll then
             self.free_scroll_ = collision
         elseif collision_tag == cc.tags.door then
-            self.in_door_ = collision
+            
+            if not collision.triggered_ then
+            
+                self.in_door_ = collision
+
+            end
         end
     end
 
