@@ -46,7 +46,8 @@ function level_complete:onLoad() -- weird bug when using onLoad
     self.text_title_:setPosition(cc.p(self.selector_:getPositionX(),
                                       self.background_:getContentSize().height - self.text_title_.label_:getContentSize().height * 1.6))
 
-    audio.playMusic("sounds/bgm_gameover.mp3", false)
+                                      
+    ccexp.AudioEngine:play2d("sounds/bgm_gameover.mp3", false, 1)
 
     -- self variables
     self.triggered_ = false
@@ -71,7 +72,7 @@ function level_complete:step(dt)
     if not self.triggered_ then
         if cc.key_pressed(cc.key_code_.a) then
             self.triggered_ = true
-            audio.playSound("sounds/sfx_selected.wav")
+            ccexp.AudioEngine:play2d("sounds/sfx_selected.mp3")
         end
 
 

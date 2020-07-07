@@ -51,6 +51,17 @@ function intro:ctor(parallax_arguments)
                              :setFlippedY(true)
                              :addTo(self, 72)
 
+    self.fade_left_sprite_ = sprite:create("sprites/core/fade/fade", cc.p(1, 0.5))
+                                   :setPosition(display.left_center)
+                                   :setFlippedY(true)
+                                   :addTo(self, 128)
+
+    self.fade_right_sprite_ = sprite:create("sprites/core/fade/fade", cc.p(0, 0.5))
+                                   :setPosition(display.right_center)
+                                   :setFlippedY(true)
+                                   :addTo(self, 128)
+                                   
+
     local belt_left_shine   = {name = "shine",  animation = {name = "belt_left_shine",  forever = true, delay = 0.20} }
     local belt_right_shine  = {name = "shine",  animation = {name = "belt_right_shine",  forever = true, delay = 0.20} }
 
@@ -86,7 +97,7 @@ function intro:ctor(parallax_arguments)
 
         local audio_delay = cc.DelayTime:create(0.8)
         local audio_callback = cc.CallFunc:create(function()
-            audio.playSound("sounds/screens/common/belt/sfx_belt_join.wav", false)
+            ccexp.AudioEngine:play2d("sounds/screens/common/belt/sfx_belt_join.mp3", false, 1)
         end)
 
         local audio_sequence = cc.Sequence:create(audio_delay, audio_callback, nil)
@@ -103,7 +114,7 @@ function intro:ctor(parallax_arguments)
     self.shadow_:runAction(shadow_sequence)
 
     if self.bgm_ ~= nil then
-        audio.playMusic(self.bgm_, false)
+        ccexp.AudioEngine:play2d(self.bgm_, false, 1)
     end
 end
 

@@ -7,6 +7,10 @@ local sprite        = import("app.core.graphical.sprite")
 
 function stage_select:onLoad()
 
+    print("stopping")
+    ccexp.AudioEngine:stopAll()
+
+
     if cc.player_.lives_ <= 0 then
         cc.player_.lives_ = 3
     end
@@ -48,7 +52,7 @@ function stage_select:onLoad()
     self.cursor_.x_position = "middle"
     self.cursor_.y_position = "middle"
 
-    audio.playMusic("sounds/bgm_stage_select.mp3", true)
+    ccexp.AudioEngine:play2d("sounds/bgm_stage_select.mp3", true, 1)
 
 
     -- self variables
@@ -170,7 +174,7 @@ function stage_select:move_left()
     end
 
     if play_fx then
-        audio.playSound("sounds/sfx_select.wav")
+        ccexp.AudioEngine:play2d("sounds/sfx_select.mp3")
     end
 end
 
@@ -197,7 +201,7 @@ function stage_select:move_right()
     end
 
     if play_fx then
-        audio.playSound("sounds/sfx_select.wav")
+        ccexp.AudioEngine:play2d("sounds/sfx_select.mp3")
     end
 
 end
@@ -226,7 +230,7 @@ function stage_select:move_up()
     end
 
     if play_fx then
-        audio.playSound("sounds/sfx_select.wav")
+        ccexp.AudioEngine:play2d("sounds/sfx_select.mp3")
     end
 
 end
@@ -254,7 +258,7 @@ function stage_select:move_down()
     end
 
     if play_fx then
-        audio.playSound("sounds/sfx_select.wav")
+        ccexp.AudioEngine:play2d("sounds/sfx_select.mp3")
     end
 
 end
@@ -278,7 +282,8 @@ function stage_select:step(dt)
                 local mug_index = selected_mug:get_image_index()
                 cc.current_level_ = cc.levels_[mug_index]
 
-                audio.playSound("sounds/sfx_selected.wav")
+                ccexp.AudioEngine:stopAll()
+                ccexp.AudioEngine:play2d("sounds/sfx_selected.mp3")
 
                 if cc.current_level_.defeated_ then
                     self:getApp()

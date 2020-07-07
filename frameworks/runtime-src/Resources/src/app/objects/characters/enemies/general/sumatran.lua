@@ -44,7 +44,7 @@ function mob:jump()
         self.current_speed_.x = self.jump_speed_.x * self:get_sprite_normal().x
         self.current_speed_.y = self.jump_speed_.y
 
-        audio.playSound("sounds/sfx_roar.wav", false)
+        ccexp.AudioEngine:play2d("sounds/sfx_roar.mp3", false, 1)
 
         self.sprite_:stop_actions()
         self.sprite_:run_action("jump")

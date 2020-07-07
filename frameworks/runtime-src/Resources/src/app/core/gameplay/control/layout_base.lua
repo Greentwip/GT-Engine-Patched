@@ -27,24 +27,30 @@ function layout_base.create(class_name)
     function layout:onAfterCreate()
 
         local function onKeyPressed(keycode, event)
-            --self:onKeypad(keycode, true)
-            self:onKeyPressed(keycode, event)
+            self:onKeypad(keycode, true)
+            --self:onKeyPressed(keycode, event)
         end
 
         local function onKeyReleased(keycode, event)
-            --self:onKeypad(keycode, false)
-            self:onKeyPressed(keycode, event)
+            self:onKeypad(keycode, false)
+            --self:onKeyPressed(keycode, event)
         end
 
 
         if device.platform == "winrt" then
             print("winrt")
+
+            local director = cc.Director:getInstance()
+            local view = director:getOpenGLView()
+
+            view:setCursorVisible(false)
+
             local function onControllerKeyPressed(controller, keycode)
-                self:onControllerPressed(controller, keycode)
+                self:onControllerPressed(controller, keycode, true)
             end
 
             local function onControllerKeyReleased(controller, keycode)
-                self:onControllerPressed(controller, keycode)
+                self:onControllerPressed(controller, keycode, false)
             end
 
             local controllerListener = cc.EventListenerController:create()
@@ -52,19 +58,50 @@ function layout_base.create(class_name)
             controllerListener:registerScriptHandler(onControllerKeyReleased, cc.Handler.EVENT_CONTROLLER_KEYUP)
             self:getScene():getEventDispatcher():addEventListenerWithSceneGraphPriority(controllerListener, self:getScene())
 
-        
-            --local keyboardListener = cc.EventListenerKeyboard:create()
-            --keyboardListener:registerScriptHandler(onKeyPressed, cc.Handler.EVENT_KEYBOARD_PRESSED)
-            --keyboardListener:registerScriptHandler(onKeyReleased, cc.Handler.EVENT_KEYBOARD_RELEASED)
-            --self:getScene():getEventDispatcher():addEventListenerWithSceneGraphPriority(keyboardListener, self:getScene())
+        else
+            local keyboardListener = cc.EventListenerKeyboard:create()
+            keyboardListener:registerScriptHandler(onKeyPressed, cc.Handler.EVENT_KEYBOARD_PRESSED)
+            keyboardListener:registerScriptHandler(onKeyReleased, cc.Handler.EVENT_KEYBOARD_RELEASED)
+            self:getScene():getEventDispatcher():addEventListenerWithSceneGraphPriority(keyboardListener, self:getScene())
+
         end
 
 
     end
 
-    function layout:onControllerPressed(controller, keycode)
+    function layout:onControllerPressed(controller, keycode, keydown)
         print("Controller Key pressed")
-        print(cc.KeyCodeKey[keycode + 1])
+        print(keycode)
+
+        local key = keycode
+
+        local translated_key
+        if key == 1 then
+            translated_key = cc.key_code_.start
+        elseif key == 64 then
+            translated_key = cc.key_code_.up
+        elseif key == 128 then
+            translated_key = cc.key_code_.down
+        elseif key == 256 then
+            translated_key = cc.key_code_.left
+        elseif key == 512 then
+            translated_key = cc.key_code_.right
+        elseif key == 4 or key == 16 then
+            translated_key = cc.key_code_.a
+        elseif key == 8 or key == 32 then
+            translated_key = cc.key_code_.b
+        end
+
+        if translated_key ~= nil then
+            if keydown then
+                cc.keys_[translated_key].status_  = cc.KEY_STATUS.DOWN
+                cc.keys_[translated_key].pressed_ = true
+            else
+                cc.keys_[translated_key].status_ = cc.KEY_STATUS.UP
+                cc.keys_[translated_key].released_ = true
+            end
+
+        end        
     end
 
 

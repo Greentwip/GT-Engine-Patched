@@ -3,18 +3,25 @@
 local testwrapper = import("app.core.gameplay.control.layout_base").create("testwrapper")
 
 function testwrapper:onLoad()
-
+    self.triggered_ = false
 end
 
 function testwrapper:step(dt)
     self:post_step(dt)
 
-    cc.current_level_ = cc.levels_[13]
+    if not self.triggered_ then
+        local level = "levels.level_weapon"
+        local physics = true
 
-    self:getApp()
-        :enterScene("levels.level", "FADE", 2, {physics = true})
-        :prepare()
+        local init = true
 
+        local scene = self:getApp()
+                          :enterScene(level, "FADE", 1, {physics = physics})
+
+        if init then
+            scene:prepare(self.exit_arguments_)
+        end
+    end
     return self
 end
 

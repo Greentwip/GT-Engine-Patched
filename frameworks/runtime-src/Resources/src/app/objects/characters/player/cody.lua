@@ -16,6 +16,30 @@ function cody:onCreate()
     self.health_bar_ = nil -- level controllers sets this up for us
     self.energy_bar_ = nil -- level controllers sets this up for us
     self:init_variables()
+
+    self.audio_tasks_ = {}
+
+    local audio_queue_thread = function()
+        while true do
+            self:audio_queue()
+            coroutine.yield(nil)
+        end
+    end
+
+
+    local cr = coroutine.create(audio_queue_thread)
+
+    self.audio_coroutine_ = cr
+    
+end
+
+function cody:audio_queue()
+    for k, v in pairs(self.audio_tasks_) do
+        v()
+
+        self.audio_tasks_[k] = nil 
+
+    end
 end
 
 function cody:animate(cname)    -- called after physics have been created
@@ -257,7 +281,7 @@ end
 
 function cody:stun(damage)
     if not self.current_browner_.stunned_ and self.vulnerable_ then
-        audio.playSound("sounds/sfx_hit.wav", false)
+        ccexp.AudioEngine:play2d("sounds/sfx_hit.mp3", false, 1)
 
         self.health_ = self.health_ - damage
 
@@ -321,7 +345,7 @@ function cody:solve_collisions()
             if self.spawning_ then
                 self.spawning_ = false
                 self:switch_browner(cc.browners_.violet_.id_)
-                audio.playSound("sounds/sfx_teleport1.wav", false)
+                ccexp.AudioEngine:play2d("sounds/sfx_teleport1.mp3", false, 1)
             end
 
         elseif collision_tag == cc.tags.item then
@@ -405,7 +429,15 @@ function cody:move()
             self.current_browner_.on_ground_    = true
             self.current_browner_.dash_jumping_ = false
             self.current_browner_.jumping_      = false
-            audio.playSound("sounds/sfx_land.wav", false)
+            
+            local audio_task = function()
+                ccexp.AudioEngine:play2d("sounds/sfx_land.mp3", false, 1)
+            end
+            
+            self.audio_tasks_[tostring(#self.audio_tasks_ + 1)] = audio_task
+
+            coroutine.resume(self.audio_coroutine_)
+
         end
     else
         --print("no contact")
@@ -485,8 +517,9 @@ function cody:check_health()
         self.current_browner_:deactivate()
         self.health_ = 0
         self.alive_ = false
-        audio.stopMusic()
-        audio.playSound("sounds/sfx_death.wav", false)
+        
+        ccexp.AudioEngine:stopAll()
+        ccexp.AudioEngine:play2d("sounds/sfx_death.mp3", false, 1)
 
         if kill_animation then
 
@@ -572,7 +605,7 @@ function cody:exit(args)
 
     self:switch_browner(cc.browners_.teleport_.id_)
 
-    audio.playSound("sounds/sfx_teleport2.wav", false)
+    ccexp.AudioEngine:play2d("sounds/sfx_teleport2.mp3", false, 1)
 
     local delay = cc.DelayTime:create(4)
     local callback = cc.CallFunc:create(function()

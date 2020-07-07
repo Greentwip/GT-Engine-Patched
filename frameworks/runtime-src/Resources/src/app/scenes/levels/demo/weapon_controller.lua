@@ -68,6 +68,18 @@ function weapon_controller:check_attack()
         local exit_callback = cc.CallFunc:create(function()
             local arguments = {}
             arguments.is_level_complete_ = true
+            
+
+            local stopMusic = cc.CallFunc:create(function()
+                ccexp.AudioEngine:stopAll()
+            end)
+
+            local delay = cc.DelayTime:create(4)
+
+            local sequence = cc.Sequence:create(delay, stopMusic, nil)
+
+            self:runAction(sequence)
+
             self.player_:exit(arguments)
         end)
 

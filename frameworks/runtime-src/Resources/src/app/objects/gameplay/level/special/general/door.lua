@@ -27,7 +27,7 @@ function special:lock(callback)
     local delay = cc.DelayTime:create(self.lock_time_ * 0.5)
 
     local lock = cc.CallFunc:create(function()
-        audio.playSound("sounds/sfx_door.wav", false)
+        ccexp.AudioEngine:play2d("sounds/sfx_door.mp3", false, 1)
         self.sprite_:run_action("lock")
     end)
 
@@ -45,7 +45,7 @@ function special:unlock(callback)
     local delay = cc.DelayTime:create(self.lock_time_ * 0.5)
 
     local lock = cc.CallFunc:create(function()
-        audio.playSound("sounds/sfx_door.wav", false)
+        ccexp.AudioEngine:play2d("sounds/sfx_door.mp3", false, 1)
         self.sprite_:run_action("lock")
         self.sprite_:reverse_action()
     end)

@@ -6,6 +6,7 @@ local label  = import("app.core.graphical.label")
 local sprite = import("app.core.graphical.sprite")
 
 local intro = import("app.scenes.special.intro")
+local fade              = import("app.core.graphical.fade")
 
 function boss_intro:onLoad()
 
@@ -38,15 +39,29 @@ function boss_intro:onLoad()
                                  sub_category_ = "screens",
                                  package_ = "boss_intro",
                                  cname_ = cc.current_level_.mug_,
-                                 bgm_ = "sounds/bgm_boss_intro.mp3",
+                                 bgm_ = nil,
                                  on_end_callback_ = self.on_intro_complete,
                                  sender_ = self}
 
     self.intro_ = intro:create(parallax_arguments)
                        :setPosition(display.left_bottom)
                        :addTo(self)
-end
 
+    local callback = cc.CallFunc:create(function()
+        if ccexp.AudioEngine:getState(self.bgm_id_) == -1 and not self.triggered_  then
+            ccexp.AudioEngine:stopAll()
+        end
+    end)
+
+    local delay = cc.DelayTime:create(10)
+
+    local sequence = cc.Sequence:create(delay, callback, nil)
+
+    self:runAction(sequence)    
+
+    self.bgm_id_ = ccexp.AudioEngine:play2d("sounds/bgm_boss_intro.mp3", false, 1)
+
+end
 
 function boss_intro:on_intro_complete()
 
@@ -72,12 +87,23 @@ function boss_intro:step(dt)
 
     self.intro_:step(dt)
 
-    if not audio.isMusicPlaying() and not self.triggered_  then
+    if ccexp.AudioEngine:getState(self.bgm_id_) == -1 and not self.triggered_  then
         self.triggered_ = true
 
-        self:getApp()
-            :enterScene("levels.level", "FADE", 1, {physics = true})
-            :prepare()
+            ccexp.AudioEngine:stopAll()
+
+            fade:create(1.0, function() end, function()
+                self.sprite_ = sprite:create("sprites/core/fade/fade", cc.p(0.5, 0.5))
+                                     :addTo(self, 1024)
+
+
+                self:getApp()
+                    :enterScene("levels.level", "FADE", 1, {physics = true})
+            
+            end, function() end, {fade_in = true, fade_out = false}, cc.p(0.5, 0.5))
+                                :setPosition(0, 0)
+                                :addTo(self, 1024)
+    
 
     end
 

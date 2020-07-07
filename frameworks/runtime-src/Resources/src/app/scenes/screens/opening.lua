@@ -13,8 +13,6 @@ function opening:onLoad()
     local sequence = cc.Sequence:create(initiate, nil)
     self:runAction(sequence)
 
-    --audio.playMusic("sounds/bgm_title.mp3", true)
-
     -- self variables
     self.triggered_ = false
 end
@@ -50,10 +48,11 @@ function opening:step(dt)
 --    if not self.triggered_ then
 --        if cc.key_pressed(cc.key_code_.start) then
 --            self.triggered_ = true
---            audio.playSound("sounds/sfx_selected.wav")
+--            ccexp.AudioEngine:play2d("sounds/sfx_selected.mp3")
 --            self:getApp():enterScene("gameplay.stage_select", "FADE", 1)
 --        end
 --    end
+--   self:getApp():enterScene("screens.testwrapper", "FADE", 1)
 
     self:post_step(dt)
 

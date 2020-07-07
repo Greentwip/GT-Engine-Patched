@@ -105,7 +105,7 @@ function level_controller:start()
         local on_fade_in = function()
             cc.pause(true)
             self:setup()
-            audio.playMusic(self.level_bgm_, true)
+            ccexp.AudioEngine:play2d(self.level_bgm_, true, 1)
         end
 
         local on_fade_out = function()
@@ -148,6 +148,9 @@ end
 
 function level_controller:schedule_component(component)
     self.scene_components_[#self.scene_components_ +1] = component
+
+    --component:scheduleUpdate(handler(component, component.step))
+
 end
 
 function level_controller:step(dt)
@@ -191,7 +194,7 @@ function level_controller:step(dt)
 
         self.player_:step(dt)
         self.camera_:step(dt)
-
+        
         self.player_:post_step(dt)
 
         if self.hud_enabled_ then
@@ -222,7 +225,7 @@ function level_controller:step(dt)
                     if self.pause_fade_ == nil then
                         local on_fade_begin = function()
                             cc.pause_status_ = cc.PAUSE_STATUS.SCREEN
-                            audio.playSound("sounds/sfx_pause.wav", false)
+                            ccexp.AudioEngine:play2d("sounds/sfx_pause.mp3", false, 1)
                             cc.pause(true)
                         end
 
@@ -251,7 +254,7 @@ function level_controller:step(dt)
 
                         if self.pause_menu_.ready_ then
                             local on_fade_begin = function()
-                                audio.playSound("sounds/sfx_selected.wav", false)
+                                ccexp.AudioEngine:play2d("sounds/sfx_selected.mp3", false, 1)
                                 self.pause_menu_.ready_ = false
                             end
 

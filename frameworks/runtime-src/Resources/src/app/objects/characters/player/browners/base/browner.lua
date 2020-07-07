@@ -421,7 +421,7 @@ function browner:charge()
         self.charge_timer_ = self.charge_timer_ + 1
         if self.charge_timer_ == 20 then
             self.charge_power_ = "mid"
-            self.sound_effects_[self.charge_power_] = audio.playSound("sounds/sfx_buster_charging_mid.wav", false)
+            self.sound_effects_[self.charge_power_] = ccexp.AudioEngine:play2d("sounds/sfx_buster_charging_mid.mp3", false, 1)
 
             if not self.tint_a_ then
                 local color_a = cc.c3b(188,188,188)
@@ -461,7 +461,7 @@ function browner:charge()
             end
 
             if self.charge_timer_ % 18 == 0 then
-                self.sound_effects_[self.charge_power_] = audio.playSound("sounds/sfx_buster_charging_high.wav", false)
+                self.sound_effects_[self.charge_power_] = ccexp.AudioEngine:play2d("sounds/sfx_buster_charging_high.mp3", false, 1)
                 self.charge_timer_ = 60
             end
 
@@ -499,13 +499,13 @@ function browner:fire()
     local bullet_power = 1
 
     if self.charge_power_ == "low" then
-        audio.playSound("sounds/sfx_buster_shoot.wav", false)
+        ccexp.AudioEngine:play2d("sounds/sfx_buster_shoot.mp3", false, 1)
     elseif self.charge_power_ == "mid" then
-        audio.playSound("sounds/sfx_buster_shoot_mid.wav", false)
+        ccexp.AudioEngine:play2d("sounds/sfx_buster_shoot_mid.mp3", false, 1)
         bullet_power = 2
     elseif self.charge_power_ == "high" then
         bullet_offset = 26
-        audio.playSound("sounds/sfx_buster_shoot_high.wav", false)
+        ccexp.AudioEngine:play2d("sounds/sfx_buster_shoot_high.mp3", false, 1)
         bullet_power = 3
     end
 

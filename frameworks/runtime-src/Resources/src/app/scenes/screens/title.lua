@@ -26,7 +26,7 @@ function title:onLoad()
     self.text_:setPosition(cc.p(self.selector_:getPositionX() + self.selector_.sprite_:getContentSize().width,
                                 self.selector_:getPositionY() + self.text_.label_:getContentSize().height * 0.5))
 
-    audio.playMusic("sounds/bgm_title.mp3", true)
+    ccexp.AudioEngine:play2d("sounds/bgm_title.mp3", true, 1)
 
     -- self variables
     self.triggered_ = false
@@ -36,15 +36,26 @@ function title:step(dt)
     if not self.triggered_ then
         if cc.key_pressed(cc.key_code_.a) then
             self.triggered_ = true
-            audio.playSound("sounds/sfx_selected.wav")
 
-            self.exit_arguments_ = {}
-            self.exit_arguments_.demo_browner_id_ = cc.browners_.violet_.id_
+            ccexp.AudioEngine:stopAll()
+            ccexp.AudioEngine:play2d("sounds/sfx_selected.mp3")
 
-            self:getApp()
---            :enterScene("levels.level_weapon", "FADE", 0.5, {physics = true})
-            :enterScene("screens.stage_select", "FADE", 0.5)
---                :prepare(self.exit_arguments_)
+            local callback = cc.CallFunc:create(function()
+
+                self.exit_arguments_ = {}
+                self.exit_arguments_.demo_browner_id_ = cc.browners_.violet_.id_
+    
+                self:getApp()
+                    :enterScene("screens.stage_select", "FADE", 0.5)
+    
+            end)
+    
+            local delay = cc.DelayTime:create(0.5)
+    
+            local sequence = cc.Sequence:create(delay, callback, nil)
+    
+            self:runAction(sequence)    
+
         end
     end
 

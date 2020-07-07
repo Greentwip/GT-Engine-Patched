@@ -85,7 +85,7 @@ function enemy:solve_collisions()
 
     for _, collision in pairs(collisions) do
         if collision:getPhysicsBody():getShapes()[1]:getTag() == cc.tags.weapon.player then
-            audio.playSound("sounds/sfx_enemyhit.wav", false)
+            ccexp.AudioEngine:play2d("sounds/sfx_enemyhit.mp3", false, 1)
 
             local blink = cc.Blink:create(0.2, 4)
             local callback = cc.CallFunc:create(self.on_after_blink)
@@ -117,7 +117,7 @@ end
 
 function enemy:onDefeated()
 
-    audio.playSound("sounds/sfx_explosion1.wav", false)
+    ccexp.AudioEngine:play2d("sounds/sfx_explosion1.mp3", false, 1)
 
     local random_item = math.floor(math.random(400))
 
@@ -193,7 +193,7 @@ end
 function enemy:fire(args)
 
     if args.sfx ~= nil then
-        audio.playSound(args.sfx, false)
+        ccexp.AudioEngine:play2d(args.sfx, false)
     end
 
     local bullet_position = cc.p(self:getPositionX() + (args.offset.x * self:get_sprite_normal().x),

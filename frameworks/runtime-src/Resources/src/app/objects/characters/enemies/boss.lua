@@ -197,7 +197,7 @@ end
 
 function boss:stun(damage)
     if not self.current_browner_.stunned_ and self.vulnerable_ then
-        audio.playSound("sounds/sfx_hit.wav", false)
+        ccexp.AudioEngine:play2d("sounds/sfx_hit.mp3", false, 1)
 
         self.health_ = self.health_ - damage
 
@@ -256,7 +256,7 @@ function boss:solve_collisions()
                 self.current_browner_:run_action("intro")
                 self.current_browner_.is_intro_ = true
 
-                audio.playSound("sounds/sfx_teleport1.wav", false)
+                ccexp.AudioEngine:play2d("sounds/sfx_teleport1.mp3", false, 1)
                 self.battle_status_ = cc.battle_status_.intro_
             end
 
@@ -278,7 +278,7 @@ function boss:move()
             self.current_browner_.on_ground_    = true
             self.current_browner_.dash_jumping_ = false
             self.current_browner_.jumping_      = false
-            audio.playSound("sounds/sfx_land.wav", false)
+            ccexp.AudioEngine:play2d("sounds/sfx_land.mp3", false, 1)
         end
     end
 
@@ -366,7 +366,8 @@ function boss:finish(full_callback)
     local delay = cc.DelayTime:create(2)
 
     local audio_callback = cc.CallFunc:create(function()
-        audio.playMusic("sounds/bgm_boss_victory.mp3", false)
+        ccexp.AudioEngine:stopAll()
+        ccexp.AudioEngine:play2d("sounds/bgm_boss_victory.mp3", false, 1)
     end)
 
     local exit_callback = cc.CallFunc:create(function()
@@ -406,8 +407,8 @@ function boss:check_health()
         self.alive_ = false
 
         --cc.player_.lives_ = cc.player_.lives_ - 1
-        audio.stopMusic()
-        audio.playSound("sounds/sfx_death.wav", false)
+        ccexp.AudioEngine:stopAll()
+        ccexp.AudioEngine:play2d("sounds/sfx_death.mp3", false, 1)
 
         self:finish(true)
 
@@ -509,7 +510,8 @@ function boss:step(dt)
 
                 self:finish(false)
             else
-                audio.playMusic("sounds/bgm_boss_vineman.mp3", true)
+                ccexp.AudioEngine:stopAll()
+                ccexp.AudioEngine:play2d("sounds/bgm_boss_vineman.mp3", true, 1)
 
                 self.player_.can_move_ = false
                 self:spawn()

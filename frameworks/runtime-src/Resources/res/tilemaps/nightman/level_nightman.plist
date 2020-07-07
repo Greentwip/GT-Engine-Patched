@@ -29,13 +29,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>level_nightman.pvr.ccz</string>
+            <string>level_nightman.png</string>
             <key>size</key>
-            <string>{1010,1498}</string>
+            <string>{1024,2048}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:0758908e33f314a738392ee139e426e1:74d406ebf644d453db174a1bffb07cf1:2a8694f2f4a27f82635f2f04161d664d$</string>
+            <string>$TexturePacker:SmartUpdate:5755804c2b3e8f77cf9ffb5735492346:74d406ebf644d453db174a1bffb07cf1:8cf095e82b65a5cd4310a1b5bb7adcd5$</string>
             <key>textureFileName</key>
-            <string>level_nightman.pvr.ccz</string>
+            <string>level_nightman.png</string>
         </dict>
     </dict>
 </plist>

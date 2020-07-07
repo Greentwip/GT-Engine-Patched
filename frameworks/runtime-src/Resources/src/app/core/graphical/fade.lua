@@ -4,10 +4,15 @@
 local fade          = class("fade", cc.Node)
 local sprite        = import("app.core.graphical.sprite")
 
-function fade:ctor(duration, on_fade_begin, on_fade_in, on_fade_out, settings)
+function fade:ctor(duration, on_fade_begin, on_fade_in, on_fade_out, settings, anchor)
 
-    self.sprite_ = sprite:create("sprites/core/fade/fade", cc.p(1,1))
-                         :addTo(self)
+    if anchor == nil then
+        self.sprite_ = sprite:create("sprites/core/fade/fade", cc.p(1,1))
+                             :addTo(self)
+    else
+        self.sprite_ = sprite:create("sprites/core/fade/fade", anchor)
+                             :addTo(self)
+    end
 
     local actions = {}
 

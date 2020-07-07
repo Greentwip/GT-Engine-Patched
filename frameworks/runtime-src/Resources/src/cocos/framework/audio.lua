@@ -114,18 +114,6 @@ function audio.setSoundsVolume(volume)
     engine:setEffectsVolume(volume)
 end
 
-function audio.playSound(filename, isLoop)
-    if not filename then
-        printError("audio.playSound() - invalid filename")
-        return
-    end
-    if type(isLoop) ~= "boolean" then isLoop = false end
-    if DEBUG > 1 then
-        printf("[audio] playSound() - filename: %s, isLoop: %s", tostring(filename), tostring(isLoop))
-    end
-    return engine:playEffect(filename, isLoop)
-end
-
 function audio.pauseSound(handle)
     if not handle then
         printError("audio.pauseSound() - invalid handle")

@@ -55,7 +55,7 @@ function taban:walk()
 
         local delay = cc.DelayTime:create(self.sprite_:get_action_duration("wake") * 2)
         local callback = cc.CallFunc:create(function()
-            audio.playSound("sounds/sfx_taban.wav", false)
+            ccexp.AudioEngine:play2d("sounds/sfx_taban.mp3", false, 1)
             self.sprite_:run_action("fly")
             self.flying_ = true
         end)
