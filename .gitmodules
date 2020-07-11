@@ -1,0 +1,6 @@
+[submodule "frameworks/runtime-src"]
+	path = frameworks/runtime-src
+	url = https://github.com/Greentwip/runtime-src
+[submodule "frameworks/cocos2d-x"]
+	path = frameworks/cocos2d-x
+	url = https://github.com/Greentwip/cocos2d-x
